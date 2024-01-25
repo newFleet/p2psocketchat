@@ -1,3 +1,3 @@
 # personal Socket chat
-for hobbyist and developers who need a solution that requires async... functions
+for hobbyist and developers who need a backend solution that requires async... functions
 
