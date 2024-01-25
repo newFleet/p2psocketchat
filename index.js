@@ -1,4 +1,10 @@
 //author: Rono
+//usecases apart from chat:
+//1.ordering in high traffic scenarios 1000+ per microsec
+//2.transit tracking handles traffic like a piece of cake
+//3.IOT devices 
+//4.video/audio calls
+//5.anything you can come up with that makes sense
 const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
