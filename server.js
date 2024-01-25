@@ -1,5 +1,6 @@
 // server.js
-//a user's guide 
+//a  simple guide of on the outline for index.js
+//author: Rono
 const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
