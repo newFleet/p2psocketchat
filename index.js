@@ -170,8 +170,7 @@ io.on('connection', (socket) => {
 // Placeholder function to simulate retrieving messages from a database
 function retrieveMessages(room) {
   return new Promise((resolve, reject) => {
-    // Replace this placeholder logic with your own code to fetch messages based on the room parameter
-    // Example: Query a database for messages belonging to the specified room
+    //example:
     //const ronos = listOfLists.filter((list) => list[0] === "rono");
     const messages =  xx.filter((list) => list[0] === room);
 
