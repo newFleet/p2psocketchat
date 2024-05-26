@@ -205,7 +205,10 @@ app.get('/messages/:room', async (req, res) => {
       return;
   }
   const x1 = JSON.parse(data.map((tt) => tt['message']));
-  const messages =  x1.filter((list) => list[0] === room);//xx//messagesByRoom[room] || [];
+  //x1 === saved directly on a supabase server 
+  //downfall for that is that it's slow and behaves weird in prod
+  //returned the old system works fine except no data us saved for p2p chat (xx)
+  const messages =  xx.filter((list) => list[0] === room);//x1.filter((list) => list[0] === room);//xx//messagesByRoom[room] || [];
   
   //res.json( {"messages":JSON.parse(data.map((tt) => tt['message']))});
 
