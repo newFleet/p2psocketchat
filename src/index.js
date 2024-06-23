@@ -1,6 +1,7 @@
 const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
@@ -13,10 +14,13 @@ const xx =[];
 const supabaseUrl = 'https://steuaippbrlbwilvzltr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0ZXVhaXBwYnJsYndpbHZ6bHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUwNTExNjYsImV4cCI6MjAzMDYyNzE2Nn0.MJY3oTZ9iwL5jq_R3swYyT8DM-tXF7cWyR_R9RkU1D0';
 const supabase = createClient(supabaseUrl, supabaseKey);
-
+const corsOptions = {
+  origin: ['https://p2psocketchat.onrender.com', 'http://localhost:3000'],
+  optionsSuccessStatus: 200
+};
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(cors(corsOptions))
 // Configure multer to handle file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
