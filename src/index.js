@@ -15,8 +15,12 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 // Configure multer to handle file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -104,10 +108,7 @@ app.post('/:room', (req, res) => {
 
   // Save the message for the specified room
   xx.push([room, [writerName,message,timestamp]]);
-  saveList([room, [writerName,message,timestamp]]);
-  deleteAllExceptLast();
-
-    console.log('List saved successfully:', xx);
+ 
   // Retrieve messages for the specified room
   retrieveMessages(room)
     .then((messages) => {
@@ -121,12 +122,7 @@ app.post('/:room', (req, res) => {
     });
 });
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-})
+
 app.get('/image/:filename', (req, res) => {
   const filename = req.params.filename;
   const imagePath = path.join(__dirname, 'custom', 'location', filename);
