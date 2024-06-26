@@ -10,9 +10,6 @@ const server = app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
 const xx =[];
-const supabaseUrl = 'https://steuaippbrlbwilvzltr.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0ZXVhaXBwYnJsYndpbHZ6bHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUwNTExNjYsImV4cCI6MjAzMDYyNzE2Nn0.MJY3oTZ9iwL5jq_R3swYyT8DM-tXF7cWyR_R9RkU1D0';
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.set('view engine', 'ejs');
 app.use((req, res, next) => {
@@ -20,7 +17,8 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
-});
+})
+
 // Configure multer to handle file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -34,7 +32,6 @@ const storage = multer.diskStorage({
     cb(null, 'file-' + uniqueSuffix + fileExtension);
   }
 });
-
 const upload = multer({ storage });
 const messagesByRoom = {};
 
@@ -48,7 +45,10 @@ app.post('/:room', (req, res) => {
 
   // Save the message for the specified room
   xx.push([room, [writerName,message,timestamp]]);
- 
+  saveList([room, [writerName,message,timestamp]]);
+  deleteAllExceptLast();
+
+    console.log('List saved successfully:', xx);
   // Retrieve messages for the specified room
   retrieveMessages(room)
     .then((messages) => {
@@ -134,7 +134,6 @@ app.get('/messages/:room', async (req, res) => {
   const room = req.params.room;
 
   // Retrieve messages for the specified room
-  //fetchData();
   //x1 === saved directly on a supabase server 
   //downfall for that is that it's slow and behaves weird in prod
   //returned the old system works fine except no data us saved for p2p chat (xx)
