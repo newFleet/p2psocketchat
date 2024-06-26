@@ -15,12 +15,19 @@ const supabaseUrl = 'https://steuaippbrlbwilvzltr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0ZXVhaXBwYnJsYndpbHZ6bHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUwNTExNjYsImV4cCI6MjAzMDYyNzE2Nn0.MJY3oTZ9iwL5jq_R3swYyT8DM-tXF7cWyR_R9RkU1D0';
 const supabase = createClient(supabaseUrl, supabaseKey);
 const corsOptions = {
-  origin: ['*'],
-  optionsSuccessStatus: 200
+  origin: ['*'], // Allow all origins for development (not recommended for production)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers (optional)
+  // Allow cookies (optional)
 };
 app.set('view engine', 'ejs');
-
-app.use(cors(corsOptions))
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
+})
 // Configure multer to handle file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -34,6 +41,67 @@ const storage = multer.diskStorage({
     cb(null, 'file-' + uniqueSuffix + fileExtension);
   }
 });
+async function fetchData() {
+  const { data, error } = await supabase
+      .from('chatnode1')
+      .select('message')
+      .order('id', { ascending: false })
+      .limit(1);
+
+  if (error) {
+      console.error('Error fetching data:', error);
+      return;
+  }
+
+  console.log('Data:', JSON.parse(data.map((tt) => tt['message'])));
+}
+async function deleteAllExceptLast() {
+  // Step 1: Fetch the last row
+  const { data: lastRow, error: fetchError } = await supabase
+    .from('chatnode1')
+    .select('id')
+    .order('id', { ascending: false })
+    .limit(1);
+
+  if (fetchError) {
+    console.error('Error fetching last row:', fetchError);
+    return;
+  }
+
+  if (lastRow.length === 0) {
+    console.log('No rows found in the table.');
+    return;
+  }
+
+  const lastRowId = lastRow[0].id;
+
+  // Step 2: Delete all rows except the last one
+  const { error: deleteError } = await supabase
+    .from('chatnode1')
+    .delete()
+    .neq('id', lastRowId);
+
+  if (deleteError) {
+    console.error('Error deleting rows:', deleteError);
+  } else {
+    console.log('All rows except the last one have been deleted.');
+  }
+}
+async function saveList(list) {
+  try {
+    const { data, error } = await supabase
+      .from('chatnode1')
+      .insert({'message':xx});
+
+    if (error) {
+      throw error;
+    }
+
+   // console.log('List saved successfully:', data);
+  } catch (error) {
+    //console.error('Error saving list:', error.message);
+  }
+}
 const upload = multer({ storage });
 const messagesByRoom = {};
 
@@ -130,12 +198,16 @@ app.post('/send-message', upload.single('file'), (req, res) => {
   io.to(room).emit('chat message', { room: room, message: message, imageUrl: imageUrl });
 });
 app.get('/messages', (req, res) => {
+ 
   res.json(messages); // Return the messages as JSON
 });
 app.get('/messages/:room', async (req, res) => {
+ 
+  // ... send your response data
   const room = req.params.room;
 
   // Retrieve messages for the specified room
+  //fetchData();
   
   //const x1 = JSON.parse(data.map((tt) => tt['message']));
   //x1 === saved directly on a supabase server 
