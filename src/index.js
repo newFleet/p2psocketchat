@@ -5,6 +5,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,12 +16,7 @@ const server = app.listen(3000, () => {
 const xx =[];
 
 app.set('view engine', 'ejs');
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-})
+app.use(cors());
 // Configure multer to handle file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
