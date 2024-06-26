@@ -34,67 +34,7 @@ const storage = multer.diskStorage({
     cb(null, 'file-' + uniqueSuffix + fileExtension);
   }
 });
-async function fetchData() {
-  const { data, error } = await supabase
-      .from('chatnode1')
-      .select('message')
-      .order('id', { ascending: false })
-      .limit(1);
 
-  if (error) {
-      console.error('Error fetching data:', error);
-      return;
-  }
-
-  console.log('Data:', JSON.parse(data.map((tt) => tt['message'])));
-}
-async function deleteAllExceptLast() {
-  // Step 1: Fetch the last row
-  const { data: lastRow, error: fetchError } = await supabase
-    .from('chatnode1')
-    .select('id')
-    .order('id', { ascending: false })
-    .limit(1);
-
-  if (fetchError) {
-    console.error('Error fetching last row:', fetchError);
-    return;
-  }
-
-  if (lastRow.length === 0) {
-    console.log('No rows found in the table.');
-    return;
-  }
-
-  const lastRowId = lastRow[0].id;
-
-  // Step 2: Delete all rows except the last one
-  const { error: deleteError } = await supabase
-    .from('chatnode1')
-    .delete()
-    .neq('id', lastRowId);
-
-  if (deleteError) {
-    console.error('Error deleting rows:', deleteError);
-  } else {
-    console.log('All rows except the last one have been deleted.');
-  }
-}
-async function saveList(list) {
-  try {
-    const { data, error } = await supabase
-      .from('chatnode1')
-      .insert({'message':xx});
-
-    if (error) {
-      throw error;
-    }
-
-   // console.log('List saved successfully:', data);
-  } catch (error) {
-    //console.error('Error saving list:', error.message);
-  }
-}
 const upload = multer({ storage });
 const messagesByRoom = {};
 
@@ -194,18 +134,7 @@ app.get('/messages/:room', async (req, res) => {
   const room = req.params.room;
 
   // Retrieve messages for the specified room
-  fetchData();
-  const { data, error } = await supabase
-      .from('chatnode1')
-      .select('message')
-      .order('id', { ascending: false })
-      .limit(1);
-
-  if (error) {
-      console.error('Error fetching data:', error);
-      return;
-  }
-  const x1 = JSON.parse(data.map((tt) => tt['message']));
+  //fetchData();
   //x1 === saved directly on a supabase server 
   //downfall for that is that it's slow and behaves weird in prod
   //returned the old system works fine except no data us saved for p2p chat (xx)
