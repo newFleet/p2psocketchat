@@ -45,8 +45,10 @@ app.post('/:room', (req, res) => {
 
   // Save the message for the specified room
   xx.push([room, [writerName,message,timestamp]]);
-  
-  console.log('List saved successfully:', xx);
+  //saveList([room, [writerName,message,timestamp]]);
+  //deleteAllExceptLast();
+
+    console.log('List saved successfully:', xx);
   // Retrieve messages for the specified room
   retrieveMessages(room)
     .then((messages) => {
@@ -97,7 +99,7 @@ app.post('/send-message', upload.single('file'), (req, res) => {
     // Move the file to a specific location
     const destinationPath = path.join(__dirname, 'custom', 'location', file.originalname);
 
-    fs.mkdir(path.join(__dirname, 'custom', 'location'), { recursive: true }, (error) => {
+    /*fs.mkdir(path.join(__dirname, 'custom', 'location'), { recursive: true }, (error) => {
       if (error) {
         console.error('Error creating destination directory:', error);
         res.send({ imageUrl: null });
@@ -112,7 +114,7 @@ app.post('/send-message', upload.single('file'), (req, res) => {
           }
         });
       }
-    });
+    });*/
   } else {
     // If no file is uploaded, send an empty response
     res.send({ imageUrl: null });
