@@ -15,8 +15,12 @@ const server = app.listen(3000, () => {
 const xx =[];
 
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+})
 // Configure multer to handle file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
